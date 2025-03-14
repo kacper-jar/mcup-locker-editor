@@ -11,7 +11,7 @@ class LockerManager:
         if os.path.exists(self.locker_file):
             with open(self.locker_file, 'r') as file:
                 return json.load(file)
-        return {"server_types": {}}
+        return {"servers": {}}
 
     def save_locker(self):
         """Save the locker data to locker.json."""
@@ -21,26 +21,25 @@ class LockerManager:
     def initialize_locker(self):
         """Initialize locker.json with an empty structure."""
         print(f"Creating a new locker file at {self.locker_file}...")
-        self.locker_data = {"server_types": {}}
+        self.locker_data = {"servers": {}}
         self.save_locker()
 
     def add_server(self, server_type):
         """Add a new server type."""
-        if server_type in self.locker_data["server_types"]:
+        if server_type in self.locker_data["servers"]:
             print(f"Server type {server_type} already exists.")
         else:
-            self.locker_data["server_types"][server_type] = []
+            self.locker_data["servers"][server_type] = []
             print(f"Server type {server_type} added.")
             self.save_locker()
 
     def add_version(self, server_type, version, url, supports_plugins):
         """Add a new version to a server type."""
-        if server_type not in self.locker_data["server_types"]:
+        if server_type not in self.locker_data["servers"]:
             print(f"Server type {server_type} does not exist. Please add it first.")
             return
 
-        versions = self.locker_data["server_types"][server_type]
-        # Check if the version already exists
+        versions = self.locker_data["servers"][server_type]
         if any(v['version'] == version for v in versions):
             print(f"Version {version} already exists for {server_type}.")
         else:
@@ -55,11 +54,11 @@ class LockerManager:
 
     def update_version(self, server_type, version, url):
         """Update the URL for an existing version."""
-        if server_type not in self.locker_data["server_types"]:
+        if server_type not in self.locker_data["servers"]:
             print(f"Server type {server_type} does not exist.")
             return
 
-        versions = self.locker_data["server_types"][server_type]
+        versions = self.locker_data["servers"][server_type]
         for v in versions:
             if v['version'] == version:
                 v['url'] = url
@@ -70,12 +69,12 @@ class LockerManager:
 
     def remove_version(self, server_type, version):
         """Remove a version from a server type."""
-        if server_type not in self.locker_data["server_types"]:
+        if server_type not in self.locker_data["servers"]:
             print(f"Server type {server_type} does not exist.")
             return
 
-        versions = self.locker_data["server_types"][server_type]
+        versions = self.locker_data["servers"][server_type]
         versions = [v for v in versions if v['version'] != version]
-        self.locker_data["server_types"][server_type] = versions
+        self.locker_data["servers"][server_type] = versions
         print(f"Version {version} removed from {server_type}.")
         self.save_locker()
