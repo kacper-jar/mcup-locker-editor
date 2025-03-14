@@ -78,3 +78,19 @@ class LockerManager:
         self.locker_data["servers"][server_type] = versions
         print(f"Version {version} removed from {server_type}.")
         self.save_locker()
+
+    def list_locker(self):
+        """List all server types and versions formated."""
+        if not self.locker_data["servers"]:
+            print("No server types found.")
+            return
+
+        for server_type, versions in self.locker_data["servers"].items():
+            print(f"Server Type: {server_type}")
+            if not versions:
+                print("  No versions available.")
+            for version in versions:
+                print(f"  Version: {version['version']}")
+                print(f"    URL: {version['url']}")
+                print(f"    Supports Plugins: {'Yes' if version['supports_plugins'] else 'No'}")
+            print("-" * 40)

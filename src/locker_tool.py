@@ -65,6 +65,9 @@ class LockerTool:
         remove_version_parser.add_argument('version', help="Version to be removed (e.g., 1.19.2)")
         remove_version_parser.set_defaults(func=lambda args: self.remove_version(args.server_type, args.version))
 
+        list_parser = subparsers.add_parser('list', help="Display a list of current locker file configuration")
+        list_parser.set_defaults(func=lambda args: self.manager.list_locker())
+
         args = parser.parse_args()
         if hasattr(args, "func"):
             args.func(args)
