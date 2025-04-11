@@ -35,6 +35,7 @@ class LockerManager:
 
     def add_version(self, server_type, version, url, supports_plugins):
         """Add a new version to a server type."""
+
         if server_type not in self.locker_data["servers"]:
             print(f"Server type {server_type} does not exist. Please add it first.")
             return
@@ -43,10 +44,16 @@ class LockerManager:
         if any(v['version'] == version for v in versions):
             print(f"Version {version} already exists for {server_type}.")
         else:
+            if supports_plugins.lower() in {'false', '0', 'no', 'off'}:
+                supports_plugins = False
+            elif supports_plugins.lower() in {'true', '1', 'yes', 'on'}:
+                supports_plugins = True
+            else:
+                raise ValueError(f"Invalid value for boolean: {supports_plugins}")
             new_version = {
                 "version": version,
                 "url": url,
-                "supports_plugins": supports_plugins
+                "supports_plugins": bool(supports_plugins)
             }
             versions.append(new_version)
             print(f"Version {version} added to {server_type}.")

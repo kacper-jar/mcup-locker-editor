@@ -48,7 +48,7 @@ class LockerTool:
         add_version_parser.add_argument('server_type', help="Server type (e.g., vanilla, spigot)")
         add_version_parser.add_argument('version', help="Version (e.g., 1.20.4)")
         add_version_parser.add_argument('url', help="Download URL for the server version")
-        add_version_parser.add_argument('supports_plugins', type=bool,
+        add_version_parser.add_argument('supports_plugins',
                                         help="Whether the version supports plugins (True/False)")
         add_version_parser.set_defaults(
             func=lambda args: self.add_version(args.server_type, args.version, args.url, args.supports_plugins))
