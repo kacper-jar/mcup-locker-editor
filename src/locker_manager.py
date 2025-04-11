@@ -1,6 +1,9 @@
 import json
 import os
 
+from utils import Utils
+
+
 class LockerManager:
     def __init__(self, locker_file='locker.json'):
         self.locker_file = locker_file
@@ -33,27 +36,32 @@ class LockerManager:
             print(f"Server type {server_type} added.")
             self.save_locker()
 
-    def add_version(self, server_type, version, url, supports_plugins):
+    def add_version(self, server_type, version, url, supports_plugins, supports_mods,
+                third_party_warning, configs):
         """Add a new version to a server type."""
 
         if server_type not in self.locker_data["servers"]:
             print(f"Server type {server_type} does not exist. Please add it first.")
             return
 
+        if configs is None:
+            configs = []
+
         versions = self.locker_data["servers"][server_type]
         if any(v['version'] == version for v in versions):
             print(f"Version {version} already exists for {server_type}.")
         else:
-            if supports_plugins.lower() in {'false', '0', 'no', 'off'}:
-                supports_plugins = False
-            elif supports_plugins.lower() in {'true', '1', 'yes', 'on'}:
-                supports_plugins = True
-            else:
-                raise ValueError(f"Invalid value for boolean: {supports_plugins}")
+            supports_plugins = Utils.get_bool(supports_plugins)
+            supports_mods = Utils.get_bool(supports_mods)
+            third_party_warning = Utils.get_bool(third_party_warning)
+
             new_version = {
                 "version": version,
                 "url": url,
-                "supports_plugins": bool(supports_plugins)
+                "supports_plugins": supports_plugins,
+                'supports_mods': supports_mods,
+                '3rd_party_warning': third_party_warning,
+                'configs': configs
             }
             versions.append(new_version)
             print(f"Version {version} added to {server_type}.")
@@ -100,4 +108,7 @@ class LockerManager:
                 print(f"  Version: {version['version']}")
                 print(f"    URL: {version['url']}")
                 print(f"    Supports Plugins: {'Yes' if version['supports_plugins'] else 'No'}")
+                print(f"    Supports Mods: {'Yes' if version['supports_mods'] else 'No'}")
+                print(f"    3rd Party Warning: {'Yes' if version['3rd_party_warning'] else 'No'}")
+                print(f"    Configs: {version['configs']}")
             print("-" * 40)

@@ -16,10 +16,10 @@ class LockerTool:
         print(f"Adding new server type: {server_type}...")
         self.manager.add_server(server_type)
 
-    def add_version(self, server_type, version, url, supports_plugins):
+    def add_version(self, server_type, version, url, supports_plugins, supports_mods, third_party_warning, configs):
         """Add a new version for a server type."""
         print(f"Adding version {version} for {server_type}...")
-        self.manager.add_version(server_type, version, url, supports_plugins)
+        self.manager.add_version(server_type, version, url, supports_plugins, supports_mods, third_party_warning, configs)
 
     def update_version(self, server_type, version, url):
         """Update the URL for an existing version."""
@@ -50,8 +50,15 @@ class LockerTool:
         add_version_parser.add_argument('url', help="Download URL for the server version")
         add_version_parser.add_argument('supports_plugins',
                                         help="Whether the version supports plugins (True/False)")
+        add_version_parser.add_argument('supports_mods',
+                                        help="Whether the version supports mods (True/False)")
+        add_version_parser.add_argument('third_party_warning',
+                                        help="Whether the version has a third party warning displayed before download (True/False)")
+        add_version_parser.add_argument('configs', nargs='*',
+                                        help="List of configuration files required for the server version")
         add_version_parser.set_defaults(
-            func=lambda args: self.add_version(args.server_type, args.version, args.url, args.supports_plugins))
+            func=lambda args: self.add_version(args.server_type, args.version, args.url, args.supports_plugins,
+                                               args.supports_mods, args.third_party_warning, args.configs))
 
         update_version_parser = subparsers.add_parser('update-version', help="Update the URL for an existing version")
         update_version_parser.add_argument('server_type', help="Server type (e.g., vanilla, spigot)")
