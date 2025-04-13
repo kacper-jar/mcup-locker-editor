@@ -36,7 +36,7 @@ class LockerManager:
             print(f"Server type {server_type} added.")
             self.save_locker()
 
-    def add_version(self, server_type, version, url, supports_plugins, supports_mods,
+    def add_version(self, server_type, version, source, url_target, supports_plugins, supports_mods,
                 third_party_warning, configs):
         """Add a new version to a server type."""
 
@@ -55,14 +55,27 @@ class LockerManager:
             supports_mods = Utils.get_bool(supports_mods)
             third_party_warning = Utils.get_bool(third_party_warning)
 
-            new_version = {
-                "version": version,
-                "url": url,
-                "supports_plugins": supports_plugins,
-                'supports_mods': supports_mods,
-                '3rd_party_warning': third_party_warning,
-                'configs': configs
-            }
+            if source == "DOWNLOAD":
+                new_version = {
+                    "version": version,
+                    "source": "DOWNLOAD",
+                    "url": url_target,
+                    "supports_plugins": supports_plugins,
+                    'supports_mods': supports_mods,
+                    '3rd_party_warning': third_party_warning,
+                    'configs': configs
+                }
+            elif source == "BUILDTOOLS":
+                new_version = {
+                    "version": version,
+                    "source": "BUILDTOOLS",
+                    "target": url_target,
+                    "supports_plugins": supports_plugins,
+                    'supports_mods': supports_mods,
+                    '3rd_party_warning': third_party_warning,
+                    'configs': configs
+                }
+
             versions.append(new_version)
             print(f"Version {version} added to {server_type}.")
             self.save_locker()
