@@ -119,7 +119,8 @@ class LockerManager:
                 print("  No versions available.")
             for version in versions:
                 print(f"  Version: {version['version']}")
-                print(f"    URL: {version['url']}")
+                print(f"    Source: {version['source']}")
+                print(f"    URL/Target: {version['url'] if version['source'] == 'DOWNLOAD' else version['target']}")
                 print(f"    Supports Plugins: {'Yes' if version['supports_plugins'] else 'No'}")
                 print(f"    Supports Mods: {'Yes' if version['supports_mods'] else 'No'}")
                 print(f"    3rd Party Warning: {'Yes' if version['3rd_party_warning'] else 'No'}")
